@@ -1,7 +1,7 @@
 from flask import render_template, flash, url_for, redirect, request
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
-from app import app, db
+from app import app, db, gpg
 from app.forms import RegistrationForm, LoginForm
 from app.models import User
 
@@ -51,3 +51,14 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
+
+@app.route('/pub_key/<key_fingerprint>')
+def pub_key_id(key_fingerprint):
+    return gpg.export_keys(key_fingerprint)
+
+
+@app.route('/pub_key/<username>')
+def pub_key_username(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    return gpg.export_keys(user.key_fingerprint)
