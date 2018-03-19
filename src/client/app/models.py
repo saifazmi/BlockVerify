@@ -1,6 +1,7 @@
 from app import db, login, gpg
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from hashlib import md5
 
 
 class User(UserMixin, db.Model):
@@ -32,6 +33,12 @@ class User(UserMixin, db.Model):
             key_length=key_length,
         )
         return gpg.gen_key(batch_key_input)
+
+    # Gravatar logic
+    def avatar(self, size):
+        digest = md5(self.email.lower().encode('utf-8')).hexdigest()
+        return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(
+            digest, size)
 
 
 @login.user_loader

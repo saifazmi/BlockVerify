@@ -1,6 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Hi, {{ current_user.username }}!</h1>
-    <code>Your Key ID: {{ current_user.key_fingerprint }}</code>
+    <table>
+        <tr valign="top">
+            <td><img src="{{ current_user.avatar(128) }}"></td>
+            <td>
+                <h1>Hi, {{ current_user.username }}!</h1>
+                <code>
+                    Your Key ID: <strong>{{ current_user.key_fingerprint }}</strong>
+                </code>
+            </td>
+        </tr>
+    </table>
+    <hr>
 {% endblock %}
