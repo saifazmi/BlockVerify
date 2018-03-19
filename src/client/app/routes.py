@@ -1,6 +1,6 @@
 from flask import render_template, flash
 from app import app, db
-from app.forms import RegistrationForm
+from app.forms import RegistrationForm, LoginForm
 from app.models import User
 
 
@@ -8,6 +8,12 @@ from app.models import User
 @app.route('/index')
 def index():
     return render_template('index.html', title='Home')
+
+
+@app.route('/login')
+def login():
+    form = LoginForm()
+    return render_template('login.html', title='Sign In', form=form)
 
 
 @app.route('/register', methods=['GET', 'POST'])
