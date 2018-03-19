@@ -55,10 +55,10 @@ def register():
 
 @app.route('/pub_key/<key_fingerprint>')
 def pub_key_id(key_fingerprint):
-    return gpg.export_keys(key_fingerprint)
+    return '<pre>{}</pre>'.format(gpg.export_keys(key_fingerprint))
 
 
 @app.route('/pub_key/<username>')
 def pub_key_username(username):
     user = User.query.filter_by(username=username).first_or_404()
-    return gpg.export_keys(user.key_fingerprint)
+    return '<pre>{}</pre>'.format(gpg.export_keys(user.key_fingerprint))

@@ -8,7 +8,7 @@
                 <h1>Hi, {{ current_user.username }}!</h1>
                 <code>
                     Your Key ID: <strong>{{ current_user.key_fingerprint }}</strong><br>
-                    <a href="{{ url_for('pub_key_id', key_fingerprint=current_user.key_fingerprint) }}">
+                    <a href="{{ url_for('pub_key_id', key_fingerprint=current_user.key_fingerprint) }}" target="_blank">
                         Export Public Key
                     </a>
                 </code>
