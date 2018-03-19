@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% if title %}
+        <title>{{ title }}|Block Verify</title>
+        {% else %}
+        <title>Block Verify</title>
+        {% endif %}
+    </head>
+    <body>
+        <nav>
+            BlockVerify:
+            <a href="{{ url_for("index") }}">Home</a>
+        </nav>
+        
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>
