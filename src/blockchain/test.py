@@ -1,6 +1,6 @@
 from time import time
 
-from transaction import Transaction
+from transaction import Transaction, TransactionPool
 from block import Block
 from blockchain import Blockchain
 
@@ -21,17 +21,21 @@ with open('./files/sign.asc') as sign:
 gen_txn = Transaction(PY_ZEN_HASH, AUTHOR_KEY, SIGNATURE)
 
 # some dummy transactions
-txns = [gen_txn]
+txn_pool = TransactionPool()
+txn_pool.add_transaction(gen_txn)
+txn_7 = None # for verification testing
 for i in range(1, 17): # 16 + 1 transactions
     t = Transaction(
         'file_hash_{}'.format(i),
         'author_key_{}'.format(i),
         'signature_{}'.format(i))
-    txns.append(t)
+    if i == 7:
+        txn_7 = t
+    txn_pool.add_transaction(t)
 
 print('='*10)
-print('Dummy Transactions:')
-[print(txns[i]) for i in range(len(txns))]
+print('Dummy Transaction Pool:')
+print(txn_pool)
 
 ## Blocks
 # genesis block
@@ -50,27 +54,11 @@ print('Dummy Blocks:')
 ## Build the blockchain with txns
 print('='*10)
 print('Adding transactions to blocks (4 txns/block)...')
-blocks[0].add_transaction(txns[0])  # hard coding 1 genesis transaction
-
-blocks[1].add_transaction(txns[1])
-blocks[1].add_transaction(txns[2])
-blocks[1].add_transaction(txns[3])
-blocks[1].add_transaction(txns[4])
-
-blocks[2].add_transaction(txns[5])
-blocks[2].add_transaction(txns[6])
-blocks[2].add_transaction(txns[7])
-blocks[2].add_transaction(txns[8])
-
-blocks[3].add_transaction(txns[9])
-blocks[3].add_transaction(txns[10])
-blocks[3].add_transaction(txns[11])
-blocks[3].add_transaction(txns[12])
-
-blocks[4].add_transaction(txns[13])
-blocks[4].add_transaction(txns[14])
-blocks[4].add_transaction(txns[15])
-blocks[4].add_transaction(txns[16])
+# hard coding 1 genesis transaction
+blocks[0].add_transaction(txn_pool.get_transaction())
+for i in range(1, 5):
+    for j in range(1, 5):
+        blocks[i].add_transaction(txn_pool.get_transaction())
 
 # Generating hash manually for now
 blocks[0]._set_block_hash(None)
@@ -89,14 +77,15 @@ print('Adding blocks to chain...')
 print('Verifying block chain...')
 chain.verify_chain()
 
-# print('='*10)
-# print('Updating timestamp of block #2...')
-# blocks[2].timestamp = time()
-# print('Verifying again...')
-# chain.verify_chain()
+print('='*10)
+print('Updating index of block #3...')
+blocks[3].index = 13
+print('Verifying again...')
+chain.verify_chain()
 
 print('='*10)
 print('Updating file_hash in  txn #7 of block #2...')
-txns[7].file_hash = 'beeboop'
+blocks[3].index = 3 # resetting for txn test
+txn_7.file_hash = 'beeboop'
 print('Verifying again...')
 chain.verify_chain()
