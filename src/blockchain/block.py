@@ -13,18 +13,22 @@ class Block:
         self.previous_hash = None
         self.next_block = None
 
-        # Transactions
+        # Transaction
         self.file_hash = file_hash
         self.author_key = author_key
         self.signature = signature
 
         self._set_block_hash(parent)
 
-    # def __repr__(self):
-    #     pass
+    def __repr__(self):
+        return 'Block({}, {}, {})'.format(
+            self.index, self.timestamp, self.block_hash
+        )
 
-    # def __str__(self):
-    #     pass
+    def __str__(self):
+        return 'Block // index:{} / timestamp:{} / block_hash:{})'.format(
+            self.index, self.timestamp, self.block_hash
+        )
 
 # set the block hash and commit to chain
     def _set_block_hash(self, parent):
@@ -48,12 +52,12 @@ class Block:
             self.author_key,
             self.signature])
 
-        block = ''.join([blockheader, txn])
-        return sha256(block.encode('utf-8')).hexdigest()
+        block_data = ''.join([blockheader, txn])
+        return sha256(block_data.encode('utf-8')).hexdigest()
 
     # Check if valid chain
     def is_valid_chain(self, previous_hash, verbose=True):
-        is_valid = False
+        is_valid = False  # maybe set to true?
 
         test_block_hash = self._calc_block_hash(previous_hash)
         if test_block_hash != self.block_hash:

@@ -5,11 +5,13 @@ class Blockchain:
         self.genesis_block = None  # head of the chain
         self.blocks = []
 
-    # def __repr__(self):
-    #     pass
+    def __repr__(self):
+        return 'Blockchain({})'.format(self.genesis_block)
 
-    # def __str__(self):
-    #     pass
+    def __str__(self):
+        return 'Blockchain // genesis:{} / current:{} / total_blocks:{}'.format(
+            self.genesis_block, self.current_block, len(self.blocks)
+        )
 
     def accept_block(self, block):
         if self.genesis_block is None:
@@ -28,4 +30,4 @@ class Blockchain:
         if is_valid:
             print('Blockchain integrity intact.')
         else:
-            print('Blockchain integrity compromised.')
+            print('Blockchain integrity compromised!')
