@@ -1,24 +1,23 @@
 from time import time
 from hashlib import sha256
+from merkletools import MerkleTools
 
 
 class Block:
 
-    def __init__(self, index, parent, file_hash, author_key,
-                 signature):
+    def __init__(self, index):
         # Block Header
         self.index = index
         self.timestamp = time()
         self.block_hash = None
         self.previous_hash = None
         self.next_block = None
+        self.merkle_tree = MerkleTools()
 
         # Transaction
-        self.file_hash = file_hash
-        self.author_key = author_key
-        self.signature = signature
+        self.transactions = []
 
-        self._set_block_hash(parent)
+        #self._set_block_hash(parent)
 
     def __repr__(self):
         return 'Block({}, {}, {})'.format(
@@ -30,7 +29,10 @@ class Block:
             self.index, self.timestamp, self.block_hash
         )
 
-# set the block hash and commit to chain
+    def add_transaction(self, transaction):
+        self.transactions.append(transaction)
+
+    # set the block hash and commit to chain
     def _set_block_hash(self, parent):
         if parent is not None:
             self.previous_hash = parent.block_hash
@@ -38,7 +40,15 @@ class Block:
         else:
             self.previous_hash = None
 
+        self._build_merkle_tree()
         self.block_hash = self._calc_block_hash(self.previous_hash)
+
+    def _build_merkle_tree(self):
+        self.merkle_tree.reset_tree()
+        for txn in self.transactions:
+            self.merkle_tree.add_leaf(txn.calc_transaction_hash())
+
+        self.merkle_tree.make_tree()
 
     # claclulate block hash based on previous hash
     def _calc_block_hash(self, previous_hash):
@@ -47,17 +57,16 @@ class Block:
             str(self.timestamp),
             str(previous_hash)])
 
-        txn = ''.join([
-            self.file_hash,
-            self.author_key,
-            self.signature])
+        block_data = ''.join([
+            blockheader,
+            str(self.merkle_tree.get_merkle_root())])
 
-        block_data = ''.join([blockheader, txn])
         return sha256(block_data.encode('utf-8')).hexdigest()
 
-    # Check if valid chain
+    # Check if chain is vlaid
     def is_valid_chain(self, previous_hash, verbose=True):
-        is_valid = False  # maybe set to true?
+        is_valid = True  # maybe set to true?
+        self._build_merkle_tree()
 
         test_block_hash = self._calc_block_hash(previous_hash)
         if test_block_hash != self.block_hash:
@@ -72,9 +81,10 @@ class Block:
 
         return is_valid
 
+    # Chain verification helper
     def _print_verification_msg(self, is_valid, verbose):
         if verbose:
             if not is_valid:
-                print('Block #{}: FAILED VERIFICATION'.format(self.index))
+                print('Block #{}: FAILED VERIFICATION!'.format(self.index))
             else:
                 print('Block #{}: PASSED VERIFICATION'.format(self.index))
