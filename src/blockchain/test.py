@@ -12,9 +12,9 @@ print(str(chain))
 
 ## Transactions
 PY_ZEN_HASH = 'e250f274f33b9b621a04264025d50e5fb9b1f989f444d13bb373882e734e996f'
-with open('my_pgp_key.asc') as pub_key:
+with open('./files/my_pgp_key.asc') as pub_key:
     AUTHOR_KEY = pub_key.read()
-with open('sign.asc') as sign:
+with open('./files/sign.asc') as sign:
     SIGNATURE = sign.read()
 
 # genesis transaction
@@ -73,15 +73,15 @@ blocks[4].add_transaction(txns[15])
 blocks[4].add_transaction(txns[16])
 
 # Generating hash manually for now
-print('Generating block hash...')
 blocks[0]._set_block_hash(None)
 blocks[1]._set_block_hash(blocks[0])
 blocks[2]._set_block_hash(blocks[1])
 blocks[3]._set_block_hash(blocks[2])
 blocks[4]._set_block_hash(blocks[3])
-[print(blocks[i].block_hash) for i in range(len(blocks))]
 print('Generating merkle root...')
 [print(str(blocks[i].merkle_tree.get_merkle_root())) for i in range(len(blocks))]
+print('Generating block hash...')
+[print(blocks[i].block_hash) for i in range(len(blocks))]
 
 
 print('Adding blocks to chain...')
