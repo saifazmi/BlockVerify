@@ -23,6 +23,14 @@ class Transaction:
         txn = ''.join([self.file_hash, self.author_key, self.signature])
         return sha256(txn.encode('utf-8')).hexdigest()
 
+    def to_dict(self):
+        data = {
+            'file_hash': self.file_hash,
+            'author_key': self.author_key,
+            'signature': self.signature
+        }
+        return data
+
 
 class GenesisTransaction(Transaction):
 

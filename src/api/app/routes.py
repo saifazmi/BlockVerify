@@ -1,5 +1,5 @@
 from flask import jsonify
-from app import app
+from app import app, blockchain
 
 
 @app.route('/api')
@@ -8,7 +8,10 @@ def api():
         'api_version': 0.1,
         'methods': {
             'GET': [
-                '/api'
+                '/api',
+                '/api/chain',
+                '/api/chain/blocks',
+                '/api/chain/blocks/transactions'
             ],
             'POST': []
         }
@@ -16,6 +19,19 @@ def api():
     return jsonify(response)
 
 
-@app.route('/chain', methods=['GET'])
+@app.route('/api/chain', methods=['GET'])
 def chain():
-    pass
+    response = blockchain.to_dict()
+    return jsonify(response)
+
+
+@app.route('/api/chain/blocks', methods=['GET'])
+def chain_blocks():
+    response = blockchain.to_dict(blocks=True)
+    return jsonify(response)
+
+
+@app.route('/api/chain/blocks/transactions', methods=['GET'])
+def chain_blocks_txns():
+    response = blockchain.to_dict(blocks=True, txns=True)
+    return jsonify(response)

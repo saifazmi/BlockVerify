@@ -104,6 +104,18 @@ class Block:
             else:
                 print('Block #{}: PASSED VERIFICATION'.format(self.index))
 
+    def to_dict(self, txns):
+        data = {
+            'index': self.index,
+            'timestamp': self.timestamp,
+            'prev_hash': self.previous_hash,
+            'block_hash': self.block_hash,
+            'nonce': self.nonce,
+            'merkle_root': self.merkle_tree.get_merkle_root()
+        }
+        if txns:
+            data['tnxs'] = [txn.to_dict() for txn in self.transactions]
+        return data
 
 class GenesisBlock(Block):
 

@@ -45,3 +45,13 @@ class Blockchain:
     def _genesis(self):
         block = GenesisBlock()
         self.accept_block(block)
+
+    def to_dict(self, blocks=False, txns=False):
+        data = {
+            'current_block': self.current_block.block_hash,
+            'genesis_block': self.genesis_block.block_hash,
+            'total_blocks': len(self.blocks)
+        }
+        if blocks:
+            data['blocks'] = [block.to_dict(txns) for block in self.blocks]
+        return data

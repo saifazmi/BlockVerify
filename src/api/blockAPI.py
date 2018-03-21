@@ -1,8 +1,8 @@
-from app import app, chain
+from app import app, blockchain
 
 
 @app.shell_context_processor
 def make_shell_context():
     return {
-        'chain': chain
+        'blockchain': blockchain
     }

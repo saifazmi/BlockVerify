@@ -6,6 +6,6 @@ from blockchain import Blockchain
 app = Flask(__name__)
 app.config.from_object(Config)
 
-chain = Blockchain()
+blockchain = Blockchain()
 
 from app import routes
