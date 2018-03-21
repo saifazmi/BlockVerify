@@ -1,6 +1,7 @@
 from hashlib import sha256
 from queue import Queue
 
+
 class Transaction:
 
     def __init__(self, file_hash, author_key, signature):
@@ -15,7 +16,7 @@ class Transaction:
 
     def __str__(self):
         return 'Transaction //\nfile_hash:{}\nauthor_key:{}\nsignature:{}' \
-        .format(self.file_hash, self.author_key, self.signature)
+            .format(self.file_hash, self.author_key, self.signature)
 
     def calc_transaction_hash(self):
         txn = ''.join([self.file_hash, self.author_key, self.signature])
@@ -33,7 +34,6 @@ class TransactionPool:
     def __str__(self):
         return 'TransactionPool(maxsize={})\n{}'.format(
             self._queue.maxsize, self._queue.queue)
-
 
     def add_transaction(self, transaction):
         self._queue.put(transaction)

@@ -21,8 +21,6 @@ class Block:
         # Transaction
         self.transactions = []
 
-        #self._set_block_hash(parent)
-
     def __repr__(self):
         return 'Block({}, {}, {})'.format(
             self.index, self.timestamp, self.block_hash

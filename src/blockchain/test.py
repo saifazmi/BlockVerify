@@ -1,5 +1,3 @@
-from time import time
-
 from transaction import Transaction, TransactionPool
 from block import Block
 from blockchain import Blockchain
@@ -23,8 +21,8 @@ gen_txn = Transaction(PY_ZEN_HASH, AUTHOR_KEY, SIGNATURE)
 # some dummy transactions
 txn_pool = TransactionPool()
 txn_pool.add_transaction(gen_txn)
-txn_7 = None # for verification testing
-for i in range(1, 17): # 16 + 1 transactions
+txn_7 = None  # for verification testing
+for i in range(1, 17):  # 16 + 1 transactions
     t = Transaction(
         'file_hash_{}'.format(i),
         'author_key_{}'.format(i),
@@ -43,7 +41,7 @@ genesis = Block(0)
 
 # some dummy transactions
 blocks = [genesis]
-for i in range(1, 5): # 4 + 1 Blocks
+for i in range(1, 5):  # 4 + 1 Blocks
     b = Block(i)
     blocks.append(b)
 
@@ -51,7 +49,7 @@ print('='*10)
 print('Dummy Blocks:')
 [print(blocks[i]) for i in range(len(blocks))]
 
-## Build the blockchain with txns
+# Build the blockchain with txns
 print('='*10)
 print('Adding transactions to blocks (4 txns/block)...')
 # hard coding 1 genesis transaction
@@ -85,7 +83,7 @@ chain.verify_chain()
 
 print('='*10)
 print('Updating file_hash in  txn #7 of block #2...')
-blocks[3].index = 3 # resetting for txn test
+blocks[3].index = 3  # resetting for txn test
 txn_7.file_hash = 'beeboop'
 print('Verifying again...')
 chain.verify_chain()

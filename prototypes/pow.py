@@ -29,6 +29,7 @@ class ProofOfWork:
         else:
             return False
 
+
 if __name__ == '__main__':
     message = 'Quick Brown Fox'
     pow0 = ProofOfWork(message, 0)

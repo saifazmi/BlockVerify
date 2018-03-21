@@ -9,9 +9,8 @@ class Blockchain:
         return 'Blockchain({})'.format(self.genesis_block)
 
     def __str__(self):
-        return 'Blockchain // genesis:{} / current:{} / total_blocks:{}'.format(
-            self.genesis_block, self.current_block, len(self.blocks)
-        )
+        return 'Blockchain // genesis:{} / current:{} / total_blocks:{}' \
+            .format(self.genesis_block, self.current_block, len(self.blocks))
 
     def accept_block(self, block):
         if self.genesis_block is None:
