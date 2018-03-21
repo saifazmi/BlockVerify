@@ -1,4 +1,5 @@
 from block import GenesisBlock
+from transaction import TransactionPool
 
 
 class Blockchain:
@@ -7,6 +8,7 @@ class Blockchain:
         self.current_block = None  # tail of the chain
         self.genesis_block = None  # head of the chain
         self.blocks = []
+        self.transaction_pool = TransactionPool()
         self._genesis()
 
     def __repr__(self):
@@ -29,7 +31,7 @@ class Blockchain:
 
     def verify_chain(self):
         if self.genesis_block is None:
-            print('Genesis block not set.')
+            raise Exception('Genesis block not defined')
 
         is_valid = self.genesis_block.is_valid_chain(None)
 
@@ -37,6 +39,8 @@ class Blockchain:
             print('Blockchain integrity intact.')
         else:
             print('Blockchain integrity compromised!')
+
+        return is_valid
 
     def _genesis(self):
         block = GenesisBlock()

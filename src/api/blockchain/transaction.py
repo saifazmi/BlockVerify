@@ -26,13 +26,18 @@ class Transaction:
 
 class GenesisTransaction(Transaction):
 
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    genesis_dir = os.path.join(basedir, 'genesis_files')
+    zen_file_path = os.path.join(genesis_dir, 'py_zen.txt')
+    author_key_path = os.path.join(genesis_dir, 'my_pgp_key.asc')
+    sign_path = os.path.join(genesis_dir, 'sign.asc')
 
-    with open('genesis_files/py_zen.txt') as file_to_hash:
+    with open(zen_file_path) as file_to_hash:
         data = file_to_hash.read()
         FILE_HASH = sha256(data.encode('utf-8')).hexdigest()
-    with open('genesis_files/my_pgp_key.asc') as pub_key:
+    with open(author_key_path) as pub_key:
         AUTHOR_KEY = pub_key.read()
-    with open('genesis_files/sign.asc') as sign:
+    with open(sign_path) as sign:
         SIGNATURE = sign.read()
 
     def __init__(self):

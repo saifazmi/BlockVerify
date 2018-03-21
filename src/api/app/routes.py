@@ -14,3 +14,8 @@ def api():
         }
     }
     return jsonify(response)
+
+
+@app.route('/chain', methods=['GET'])
+def chain():
+    pass
