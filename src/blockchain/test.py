@@ -61,11 +61,11 @@ for i in range(1, 5):
         blocks[i].add_transaction(txn_pool.get_transaction())
 
 # Generating hash manually for now
-blocks[0]._set_block_hash(None)
-blocks[1]._set_block_hash(blocks[0])
-blocks[2]._set_block_hash(blocks[1])
-blocks[3]._set_block_hash(blocks[2])
-blocks[4]._set_block_hash(blocks[3])
+blocks[0].set_block_hash(None)
+blocks[1].set_block_hash(blocks[0])
+blocks[2].set_block_hash(blocks[1])
+blocks[3].set_block_hash(blocks[2])
+blocks[4].set_block_hash(blocks[3])
 print('Generating merkle root...')
 [print(str(blocks[i].merkle_tree.get_merkle_root())) for i in range(len(blocks))]
 print('Generating block hash...')
@@ -79,7 +79,7 @@ chain.verify_chain()
 
 print('='*10)
 print('Updating index of block #3...')
-blocks[3].index = 13
+blocks[3].index = 8
 print('Verifying again...')
 chain.verify_chain()
 

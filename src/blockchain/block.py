@@ -5,12 +5,16 @@ from merkletools import MerkleTools
 
 class Block:
 
+    NONCE_LEVEL = 3
+
     def __init__(self, index):
         # Block Header
         self.index = index
         self.timestamp = time()
         self.block_hash = None
         self.previous_hash = None
+        self.nonce = 0
+
         self.next_block = None
         self.merkle_tree = MerkleTools()
 
@@ -33,7 +37,7 @@ class Block:
         self.transactions.append(transaction)
 
     # set the block hash and commit to chain
-    def _set_block_hash(self, parent):
+    def set_block_hash(self, parent):
         if parent is not None:
             self.previous_hash = parent.block_hash
             parent.next_block = self
@@ -41,7 +45,8 @@ class Block:
             self.previous_hash = None
 
         self._build_merkle_tree()
-        self.block_hash = self._calc_block_hash(self.previous_hash)
+        self.block_hash = self._calc_proof_of_work(
+            self._calc_block_hash(self.previous_hash))
 
     def _build_merkle_tree(self):
         self.merkle_tree.reset_tree()
@@ -49,6 +54,15 @@ class Block:
             self.merkle_tree.add_leaf(txn.calc_transaction_hash())
 
         self.merkle_tree.make_tree()
+
+    def _calc_proof_of_work(self, block_hash):
+        while True:
+            guess = f'{block_hash}{self.nonce}'
+            guess_hash = sha256(guess.encode('utf-8')).hexdigest()
+            if guess_hash[:Block.NONCE_LEVEL] == '0' * Block.NONCE_LEVEL:
+                return guess_hash
+            else:
+                self.nonce += 1
 
     # claclulate block hash based on previous hash
     def _calc_block_hash(self, previous_hash):
@@ -65,10 +79,11 @@ class Block:
 
     # Check if chain is vlaid
     def is_valid_chain(self, previous_hash, verbose=True):
-        is_valid = True  # maybe set to true?
+        is_valid = True
         self._build_merkle_tree()
 
-        test_block_hash = self._calc_block_hash(previous_hash)
+        test_block = f'{self._calc_block_hash(previous_hash)}{self.nonce}'
+        test_block_hash = sha256(test_block.encode('utf-8')).hexdigest()
         if test_block_hash != self.block_hash:
             is_valid = False
         else:
