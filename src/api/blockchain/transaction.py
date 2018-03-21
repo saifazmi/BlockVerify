@@ -5,7 +5,7 @@ import os
 
 class Transaction:
 
-    def __init__(self, file_hash, author_key, signature):
+    def __init__(self, file_hash=None, author_key=None, signature=None):
         self.file_hash = file_hash
         self.author_key = author_key
         self.signature = signature
@@ -20,7 +20,10 @@ class Transaction:
             .format(self.file_hash, self.author_key, self.signature)
 
     def calc_transaction_hash(self):
-        txn = ''.join([self.file_hash, self.author_key, self.signature])
+        txn = ''.join([
+            str(self.file_hash),
+            str(self.author_key),
+            str(self.signature)])
         return sha256(txn.encode('utf-8')).hexdigest()
 
     def to_dict(self):
@@ -30,6 +33,11 @@ class Transaction:
             'signature': self.signature
         }
         return data
+
+    def from_dict(self, data):
+        for field in ['file_hash', 'author_key', 'signature']:
+            if field in data:
+                setattr(self, field, data[field])
 
 
 class GenesisTransaction(Transaction):

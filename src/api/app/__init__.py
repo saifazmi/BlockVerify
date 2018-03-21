@@ -8,4 +8,4 @@ app.config.from_object(Config)
 
 blockchain = Blockchain()
 
-from app import routes
+from app import routes, errors

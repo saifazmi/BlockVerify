@@ -1,5 +1,6 @@
-from flask import jsonify
-from app import app, blockchain
+from flask import jsonify, request
+from app import app, errors, blockchain
+import transaction
 
 
 @app.route('/api')
@@ -35,3 +36,26 @@ def chain_blocks():
 def chain_blocks_txns():
     response = blockchain.to_dict(blocks=True, txns=True)
     return jsonify(response)
+
+
+@app.route('/api/transaction/new', methods=['POST'])
+def new_transaction():
+    data = request.get_json()
+    required = ['file_hash', 'author_key', 'signature']
+
+    if not all(k in data for k in required):
+        return errors.bad_request(
+            'missing values, must provide file_hash, author_key, signature')
+
+    txn = transaction.Transaction()
+    txn.from_dict(data)
+    blockchain.transaction_pool.add_transaction(txn)
+    respone = {'message': 'Transaction will be added to Block #{}'.format(
+        blockchain.current_block.index + 1
+    )}
+    return jsonify(respone)
+
+
+@app.route('/api/mine', methods=['GET'])
+def mine():
+    pass

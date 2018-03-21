@@ -117,6 +117,7 @@ class Block:
             data['tnxs'] = [txn.to_dict() for txn in self.transactions]
         return data
 
+
 class GenesisBlock(Block):
 
     INDEX = 0

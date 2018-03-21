@@ -1,5 +1,5 @@
 from block import GenesisBlock
-from transaction import TransactionPool
+from transaction import TransactionPool, Transaction
 
 
 class Blockchain:
