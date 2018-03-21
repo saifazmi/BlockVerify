@@ -50,7 +50,8 @@ class Blockchain:
         data = {
             'current_block': self.current_block.block_hash,
             'genesis_block': self.genesis_block.block_hash,
-            'total_blocks': len(self.blocks)
+            'total_blocks': len(self.blocks),
+            'txn_pool_size': self.transaction_pool._queue.maxsize
         }
         if blocks:
             data['blocks'] = [block.to_dict(txns) for block in self.blocks]
