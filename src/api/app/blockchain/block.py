@@ -2,6 +2,8 @@ from time import time
 from hashlib import sha256
 from merkletools import MerkleTools
 
+from transaction import GenesisTransaction
+
 
 class Block:
 
@@ -27,7 +29,7 @@ class Block:
         )
 
     def __str__(self):
-        return 'Block // index:{} / timestamp:{} / block_hash:{})'.format(
+        return 'Block // index:{} / timestamp:{} / block_hash:{}'.format(
             self.index, self.timestamp, self.block_hash
         )
 
@@ -101,3 +103,13 @@ class Block:
                 print('Block #{}: FAILED VERIFICATION!'.format(self.index))
             else:
                 print('Block #{}: PASSED VERIFICATION'.format(self.index))
+
+
+class GenesisBlock(Block):
+
+    INDEX = 0
+
+    def __init__(self):
+        super().__init__(GenesisBlock.INDEX)
+        self.add_transaction(GenesisTransaction())
+        self.set_block_hash(None)

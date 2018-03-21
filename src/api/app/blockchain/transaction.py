@@ -23,6 +23,23 @@ class Transaction:
         return sha256(txn.encode('utf-8')).hexdigest()
 
 
+class GenesisTransaction(Transaction):
+    with open('./files/py_zen.txt') as file_to_hash:
+        data = file_to_hash.read()
+        FILE_HASH = sha256(data.encode('utf-8')).hexdigest()
+    with open('./files/my_pgp_key.asc') as pub_key:
+        AUTHOR_KEY = pub_key.read()
+    with open('./files/sign.asc') as sign:
+        SIGNATURE = sign.read()
+
+    def __init__(self):
+        super().__init__(
+            GenesisTransaction.FILE_HASH,
+            GenesisTransaction.AUTHOR_KEY,
+            GenesisTransaction.SIGNATURE
+        )
+
+
 class TransactionPool:
 
     def __init__(self):

@@ -1,16 +1,23 @@
+from block import GenesisBlock
+
+
 class Blockchain:
 
     def __init__(self):
-        self.current_block = None
+        self.current_block = None  # tail of the chain
         self.genesis_block = None  # head of the chain
         self.blocks = []
+        self._genesis()
 
     def __repr__(self):
-        return 'Blockchain({})'.format(self.genesis_block)
+        return 'Blockchain({})'.format(repr(self.genesis_block))
 
     def __str__(self):
         return 'Blockchain // genesis:{} / current:{} / total_blocks:{}' \
-            .format(self.genesis_block, self.current_block, len(self.blocks))
+            .format(
+                repr(self.genesis_block),
+                repr(self.current_block),
+                len(self.blocks))
 
     def accept_block(self, block):
         if self.genesis_block is None:
@@ -30,3 +37,7 @@ class Blockchain:
             print('Blockchain integrity intact.')
         else:
             print('Blockchain integrity compromised!')
+
+    def _genesis(self):
+        block = GenesisBlock()
+        self.accept_block(block)
