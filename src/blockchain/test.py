@@ -66,8 +66,9 @@ blocks[3].set_block_hash(blocks[2])
 blocks[4].set_block_hash(blocks[3])
 print('Generating merkle root...')
 [print(str(blocks[i].merkle_tree.get_merkle_root())) for i in range(len(blocks))]
-print('Generating block hash...')
-[print(blocks[i].block_hash) for i in range(len(blocks))]
+print('Generating block hash and PoW...')
+[print('{}::{}'.format(blocks[i].nonce, blocks[i].block_hash))
+    for i in range(len(blocks))]
 
 
 print('Adding blocks to chain...')
