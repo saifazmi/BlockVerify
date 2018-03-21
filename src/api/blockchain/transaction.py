@@ -77,7 +77,11 @@ class TransactionPool:
             self._queue.maxsize, self._queue.queue)
 
     def add_transaction(self, transaction):
-        self._queue.put(transaction)
+        self._queue.put(transaction, block=False)
 
     def get_transaction(self):
-        return self._queue.get()
+        return self._queue.get(block=False)
+
+    def is_empty(self):
+        return self._queue.empty()
+

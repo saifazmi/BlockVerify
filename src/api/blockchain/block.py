@@ -104,7 +104,7 @@ class Block:
             else:
                 print('Block #{}: PASSED VERIFICATION'.format(self.index))
 
-    def to_dict(self, txns):
+    def to_dict(self, txns=False):
         data = {
             'index': self.index,
             'timestamp': self.timestamp,
