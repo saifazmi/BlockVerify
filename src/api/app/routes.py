@@ -122,8 +122,10 @@ def block_by_hash(block_hash):
 def new_transaction():
     data = request.get_json()
 
+     # 400: bad request check
+    if data is None:
+        return errors.bad_request('expected json data in body')
     required = ['file_hash', 'author_key', 'signature']
-    # 400: bad request check
     if not all(k in data for k in required):
         return errors.bad_request(
             'missing values, must provide file_hash, author_key, signature')

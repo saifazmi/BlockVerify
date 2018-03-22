@@ -20,4 +20,4 @@ gpg = GPG(
     keyring='pubring.gpg',
     secring='secring.gpg')
 
-from app import routes, models
+from app import routes, models, file_handler, block_api

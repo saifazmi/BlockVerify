@@ -9,5 +9,7 @@ class Config:
         'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     GPG_KEY_STORE = os.environ.get('GPG_KEY_STORE') or os.path.join(
-        basedir, 'keys'
-    )
+        basedir, 'keys')
+    UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER') or os.path.join(
+        basedir, 'uploads')
+    ALLOWED_EXTENSIONS = []

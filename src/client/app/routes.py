@@ -1,9 +1,14 @@
+import os
+import sys
 from flask import render_template, flash, url_for, redirect, request
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
+from werkzeug.utils import secure_filename
 from app import app, db, gpg
-from app.forms import RegistrationForm, LoginForm
+from app.forms import RegistrationForm, LoginForm, AddFileForm
 from app.models import User
+from app.file_handler import file_hash, file_signature, signature_key
+from app.block_api import add_to_chain
 
 
 @app.route('/')
@@ -51,6 +56,46 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
+
+@app.route('/add_file', methods=['GET', 'POST'])
+@login_required
+def add_file():
+    form = AddFileForm()
+    code = None
+    response = None
+    file_data = {}
+    if form.validate_on_submit():
+        if request.method == 'POST':
+            # check if the post request has the file part
+            if 'file' not in request.files:
+                flash('No file part')
+                return redirect(url_for('add_file'))
+            file = request.files['file']
+            # sys.stderr.write('TEST>>>>>>' + str(file))
+            # sys.stderr.flush()
+            # if user does not select file, browser also
+            # submit a empty part without filename
+            if file:
+                file_data['file_name'] = secure_filename(file.filename)
+
+                file.save(os.path.join(
+                    app.config['UPLOAD_FOLDER'], file_data['file_name']))
+
+                file_data['file_hash'] = file_hash(file_data['file_name'])
+                file_data['file_signature'] = file_signature(
+                    file_data['file_hash'], current_user.key_fingerprint)
+                file_data['sign_key'] = signature_key(
+                    current_user.key_fingerprint)
+
+                code, response = add_to_chain(file_data)
+                return render_template(
+                    'add_file.html', title='Add File', form=form, code=code,
+                    response=response, file_data=file_data)
+
+    return render_template(
+        'add_file.html', title='Add File', form=form, code=code,
+        response=response, file_data=file_data)
 
 
 @app.route('/pub_key/<key_fingerprint>')

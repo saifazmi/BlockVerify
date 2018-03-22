@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Add File</h1>
+    <form action="" method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.file.label }}<br>
+            {{ form.file(size=32) }}<br>
+            {% for error in form.file.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    <hr>
+    {% if response !=  None %}
+    <p {% if code != 201 %} style="color: red;" {% endif %}>
+        <strong>{{ response.get('message') }}</strong>
+    </p>
+    <p><strong>File Hash:</strong> {{ file_data['file_hash'] }}</p>
+    <p><strong>File Hash Signature:</strong><br>
+        <pre>{{ file_data['file_signature'] }}</pre>
+    </p>
+    <p><strong>Public key used for signature (Author Pub Key):</strong><br>
+        <pre>{{ file_data['sign_key'] }}</pre>
+    </p>
+    <p><strong>Key ID:</strong><br>
+        <pre>{{ current_user.key_fingerprint }}</pre>
+    </p>
+    <hr>
+    {% endif %}
+{% endblock %}
