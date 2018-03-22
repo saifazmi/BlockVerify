@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Verify File</h1>
+    <form action="" method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.file.label }}<br>
+            {{ form.file(size=32) }}<br>
+            {% for error in form.file.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    <hr>
+    {% if response !=  None %}
+    <p {% if code != 200 %} style="color: red;" {% endif %}>
+        <strong>{{ response.get('message') }}</strong>
+    </p>
+    {% if code == 200 %}
+    <p><strong>Searched For:</strong> {{ response.get('search_for') }}</p>
+    <h3>File Transaction in Blockchain:</h3>
+    <p><strong>File Hash:</strong><br>
+        <pre>{{ response.get('txn').get('file_hash') }}</pre>
+    </p>
+    <p><strong>Author Key:</strong><br>
+        <pre>{{ response.get('txn').get('author_key') }}</pre>
+    </p>
+    <p><strong>Signature:</strong><br>
+        <pre>{{ response.get('txn').get('signature') }}</pre>
+    </p>
+    <hr>
+    <h3>Verifying Signature:</h3>
+    <p><strong>Valid:</strong><br>
+        <pre>{{ verify.valid }}</pre>
+    </p>
+    <p><strong>Trust Level:</strong><br>
+        <pre>{{ verify.trust_level }} : {{ verify.trust_text }}</pre>
+    </p>
+    <p><strong>Status:</strong><br>
+        <pre>{{ verify.status }}</pre>
+    </p>
+
+    {% if verify.valid %}
+    <p style="color: blue;"><strong>Verification PASSED.</strong></p>
+    {% else %}
+    <p style="color: red;"><strong>Verification FAILED!</strong></p>
+    {% endif %}
+
+    <hr>
+    <h3>Signature Details:</h3>
+    <p><strong>Signing Key ID:</strong><br>
+        <pre>{{ verify.fingerprint }}</pre>
+    </p>
+    <p><strong>Key User ID:</strong><br>
+        <pre>{{ verify.username }}</pre>
+    </p>
+    <p><strong>Sign Timestamp:</strong><br>
+        <pre>{{ verify.sig_timestamp }}</pre>
+    </p>
+    <hr>
+    <hr>
+    {% endif %}
+    {% endif %}
+{% endblock %}

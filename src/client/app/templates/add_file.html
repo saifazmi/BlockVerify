@@ -19,6 +19,7 @@
         <strong>{{ response.get('message') }}</strong>
     </p>
     <p><strong>File Hash:</strong> {{ file_data['file_hash'] }}</p>
+    {% if code == 201 %}
     <p><strong>File Hash Signature:</strong><br>
         <pre>{{ file_data['file_signature'] }}</pre>
     </p>
@@ -29,5 +30,6 @@
         <pre>{{ current_user.key_fingerprint }}</pre>
     </p>
     <hr>
+    {% endif %}
     {% endif %}
 {% endblock %}

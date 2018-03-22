@@ -9,12 +9,13 @@
     <body>
         <div>
             BlockVerify:
-            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('index') }}">Home</a> |
+            <a href="{{ url_for('verify_file') }}">Verify_File</a> |
             {% if current_user.is_anonymous %}
-            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('login') }}">Login</a> |
             {% else %}
-            <a href="{{ url_for('add_file') }}">Upload</a>
-            <a href="{{ url_for('logout') }}">Logout</a>
+            <a href="{{ url_for('add_file') }}">Add_File</a> |
+            <a href="{{ url_for('logout') }}">Logout</a> |
             {% endif %}
         </div>
         <hr>
