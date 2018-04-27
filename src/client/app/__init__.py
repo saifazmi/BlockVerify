@@ -15,7 +15,7 @@ login = LoginManager(app)
 login.login_view = 'login'
 
 gpg = GPG(
-    binary='/usr/bin/gpg1',
+    binary=app.config['GPG_BINARY'],
     homedir=app.config['GPG_KEY_STORE'],
     keyring='pubring.gpg',
     secring='secring.gpg')

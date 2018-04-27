@@ -12,8 +12,7 @@ class Transaction:
 
     def __repr__(self):
         return 'Transaction({}, {}, {})'.format(
-            self.file_hash, self.author_key, self.signature
-        )
+            self.file_hash, self.author_key, self.signature)
 
     def __str__(self):
         return 'Transaction //\nfile_hash:{}\nauthor_key:{}\nsignature:{}' \

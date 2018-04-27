@@ -21,9 +21,12 @@ class Blockchain:
                 repr(self.current_block),
                 len(self.blocks))
 
+    def __len__(self):
+        return len(self.blocks)
+
     def add_transaction(self, data):
-        txn = Transaction()
-        txn.from_dict(data)
+        txn = Transaction()  # create new txn
+        txn.from_dict(data)  # initialise with json data
         self.transaction_pool.append(txn)
 
     def accept_block(self, block):
@@ -41,6 +44,7 @@ class Blockchain:
 
         block.set_block_hash(self.current_block)
         self.accept_block(block)
+        self.transaction_pool.clear()
         return block.index
 
     def file_exists(self, file_hash):

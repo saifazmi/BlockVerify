@@ -10,6 +10,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     GPG_KEY_STORE = os.environ.get('GPG_KEY_STORE') or os.path.join(
         basedir, 'keys')
+    GPG_BINARY = os.environ.get('GPG_BINARY') or '/usr/bin/gpg1'
     UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER') or os.path.join(
         basedir, 'uploads')
     ALLOWED_EXTENSIONS = []

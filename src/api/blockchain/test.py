@@ -5,6 +5,7 @@ from blockchain import Blockchain
 
 # Blockchain
 chain = Blockchain()
+print('// Blockchain initialised with genesis block:')
 print(repr(chain))
 print(str(chain))
 
@@ -73,7 +74,7 @@ print('Verifying again...')
 chain.verify_chain()
 
 print('='*10)
-print('Updating file_hash in  txn #10 of block #3...')
+print('Updating file_hash in txn #10 of block #3...')
 chain.blocks[2].index = 2  # resetting for txn test
 txn_10.file_hash = 'beeboop'
 print('Verifying again...')

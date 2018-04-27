@@ -20,7 +20,7 @@
     </p>
     {% if code == 200 %}
     <p><strong>Searched For:</strong> {{ response.get('search_for') }}</p>
-    <h3>File Transaction in Blockchain:</h3>
+    <h3>File Data in Blockchain:</h3>
     <p><strong>File Hash:</strong><br>
         <pre>{{ response.get('txn').get('file_hash') }}</pre>
     </p>
@@ -29,6 +29,9 @@
     </p>
     <p><strong>Signature:</strong><br>
         <pre>{{ response.get('txn').get('signature') }}</pre>
+    </p>
+    <p><strong>Added on (Block Timestamp):</strong><br>
+        <pre>{{ response.get('timestamp') }}</pre>
     </p>
     <hr>
     <h3>Verifying Signature:</h3>

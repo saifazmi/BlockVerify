@@ -25,13 +25,14 @@ class Block:
 
     def __repr__(self):
         return 'Block({}, {}, {})'.format(
-            self.index, self.timestamp, self.block_hash
-        )
+            self.index, self.timestamp, self.block_hash)
 
     def __str__(self):
         return 'Block // index:{} / timestamp:{} / block_hash:{}'.format(
-            self.index, self.timestamp, self.block_hash
-        )
+            self.index, self.timestamp, self.block_hash)
+
+    def __len__(self):
+        return len(self.transactions)
 
     def add_transaction(self, transaction):
         self.transactions.append(transaction)
@@ -45,8 +46,7 @@ class Block:
             self.previous_hash = None
 
         self._build_merkle_tree()
-        self.block_hash = self._calc_proof_of_work(
-            self._calc_block_hash(self.previous_hash))
+        self.block_hash = self._calc_proof_of_work()
 
     def _build_merkle_tree(self):
         self.merkle_tree.reset_tree()
@@ -55,9 +55,9 @@ class Block:
 
         self.merkle_tree.make_tree()
 
-    def _calc_proof_of_work(self, block_hash):
+    def _calc_proof_of_work(self):
         while True:
-            guess = f'{block_hash}{self.nonce}'
+            guess = f'{self._calc_block_hash(self.previous_hash)}{self.nonce}'
             guess_hash = sha256(guess.encode('utf-8')).hexdigest()
             if guess_hash[:Block.NONCE_LEVEL] == '0' * Block.NONCE_LEVEL:
                 return guess_hash
@@ -69,7 +69,8 @@ class Block:
         blockheader = ''.join([
             str(self.index),
             str(self.timestamp),
-            str(previous_hash)])
+            str(previous_hash),
+            str(self.nonce)])
 
         block_data = ''.join([
             blockheader,
@@ -84,7 +85,8 @@ class Block:
 
         test_block = f'{self._calc_block_hash(previous_hash)}{self.nonce}'
         test_block_hash = sha256(test_block.encode('utf-8')).hexdigest()
-        if test_block_hash != self.block_hash:
+        if test_block_hash != self.block_hash and \
+            test_block_hash[:Block.NONCE_LEVEL] == '0' * Block.NONCE_LEVEL:
             is_valid = False
         else:
             is_valid = self.previous_hash == previous_hash

@@ -1,5 +1,6 @@
 from flask import jsonify, request
-from app import app, errors, blockchain
+from app import app, db, errors, blockchain
+from app.models import File
 
 
 @app.route('/api')
@@ -13,7 +14,11 @@ def api():
                 '/api/chain/blocks',
                 '/api/chain/blocks/transactions',
                 '/api/chain/validate',
-                '/api/mine'
+                '/api/chain/search/file/<file_hash>',
+                '/api/mine',
+                '/api/blocks',
+                '/api/blocks/<int:index>',
+                '/api/blocks/<block_hash>'
             ],
             'POST': [
                 '/api/transaction/new'
@@ -55,24 +60,23 @@ def chain_validate():
     return jsonify(respone), 200
 
 
-@app.route('/api/chain/search/file/<file_hash>')
+@app.route('/api/chain/search/file/<file_hash>', methods=['GET'])
 def chain_file_search(file_hash):
     response = {
         'search_for': file_hash,
         'file_found': False
     }
 
-    for block in blockchain.blocks:
-        for txn in block.transactions:
-            if txn.file_hash == file_hash:
-                response['file_found'] = True
-                response['message'] = 'file found'
-                response['txn'] = txn.to_dict()
-
-    if response['file_found']:
-        return jsonify(response), 200
-    else:
+    file = File.query.filter_by(file_hash=file_hash).first()
+    if file is None:
         return errors.error_response(404, 'file not found')
+    else:
+        response['file_found'] = True
+        response['message'] = 'file found'
+        txn = blockchain.blocks[file.block_index].transactions[file.txn_index]
+        response['txn'] = txn.to_dict()
+        response['timestamp'] = blockchain.blocks[file.block_index].timestamp
+        return jsonify(response), 200
 
 
 # MINE ROUTES
@@ -82,6 +86,17 @@ def mine():
         return errors.bad_request('transaction pool is empty')
 
     block_index = blockchain.mine()
+    txn_index = 0
+    for txn in blockchain.blocks[block_index].transactions:
+        file = File(
+            file_hash=txn.file_hash,
+            block_hash=blockchain.blocks[block_index].block_hash,
+            block_index=block_index,
+            txn_index=txn_index)
+        db.session.add(file)
+        txn_index += 1
+    db.session.commit()
+
     response = {
         'message': 'new block created',
         'block': blockchain.blocks[block_index].to_dict(txns=False)
@@ -130,9 +145,16 @@ def new_transaction():
         return errors.bad_request(
             'missing values, must provide file_hash, author_key, signature')
 
-    # check if tranx already exists in
-    if blockchain.file_exists(data['file_hash']):
+    # check if txn already exists in blockchain
+    file = File.query.filter_by(file_hash=data['file_hash']).first()
+    if file is not None:
         return errors.error_response(403, 'file already exists')
+
+    # check if txn already exists in txn pool
+    for txn in blockchain.transaction_pool:
+        if data['file_hash'] == txn.file_hash:
+            return errors.error_response(
+                403, 'file in transaction pool, wait for block to be mined')
 
     blockchain.add_transaction(data)
     respone = {'message': 'Transaction will be added to Block #{}'.format(

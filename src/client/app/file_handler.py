@@ -5,12 +5,12 @@ from app import app, gpg
 
 def file_hash(filename):
     file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    with open(file, 'rb') as fileToHash:
-        data = fileToHash.read()
-        sha256FileHash = hashlib.sha256(data).hexdigest()
+    with open(file, 'rb') as file_to_hash:
+        data = file_to_hash.read()
+        sha256_file_hash = hashlib.sha256(data).hexdigest()
 
     os.remove(file)
-    return sha256FileHash
+    return sha256_file_hash
 
 
 def file_signature(hash, keyid):
