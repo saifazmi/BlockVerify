@@ -86,7 +86,7 @@ class Block:
         test_block = f'{self._calc_block_hash(previous_hash)}{self.nonce}'
         test_block_hash = sha256(test_block.encode('utf-8')).hexdigest()
         if test_block_hash != self.block_hash and \
-            test_block_hash[:Block.NONCE_LEVEL] == '0' * Block.NONCE_LEVEL:
+            test_block_hash[:Block.NONCE_LEVEL] != '0' * Block.NONCE_LEVEL:
             is_valid = False
         else:
             is_valid = self.previous_hash == previous_hash
