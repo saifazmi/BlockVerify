@@ -59,7 +59,7 @@ class Blockchain:
         # check the txns in txn pool for file hash
         for txn in self.transaction_pool:
             if txn.file_hash == file_hash:
-                    exists = True
+                exists = True
 
         return exists
 
@@ -67,7 +67,7 @@ class Blockchain:
         if self.genesis_block is None:
             raise Exception('Genesis block not defined')
 
-        is_valid = self.genesis_block.is_valid_chain(None)
+        is_valid = self.genesis_block.is_valid_chain()
 
         if is_valid:
             print('Blockchain integrity intact.')
