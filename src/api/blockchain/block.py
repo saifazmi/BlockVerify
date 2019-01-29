@@ -178,9 +178,9 @@ class Block:
         Parameters
         ----------
         previous_hash : str, optional
-            Block hash of the block preceding this one from which the validation
-            process will start (the default is None, which validates the whole
-            chain from the genesis block)
+            Block hash of the block preceding this one from which the
+            validation process will start (the default is None, which
+            validates the whole chain from the genesis block)
         verbose : bool, optional
             True to print  the validation status of each block in the
             blockchain, else False (the default is True)
@@ -218,18 +218,20 @@ class Block:
                 print('Block #{}: PASSED VERIFICATION'.format(self.index))
 
     def to_dict(self, txns=False):
-        """[summary]
+        """Converts this object to a python dictionary
 
         Parameters
         ----------
         txns : bool, optional
-            [description] (the default is False, which [default_description])
+            set to True to include all the transactions in the block
+            (the default is False, which doesn't include transactions)
 
         Returns
         -------
-        [type]
-            [description]
+        dict
+            A python dictionary containing Block data
         """
+
 
         data = {
             'index': self.index,
@@ -245,6 +247,7 @@ class Block:
 
 
 class GenesisBlock(Block):
+    """A class used to represent a Genesis Block in the Blockchain."""
 
     INDEX = 0
 
