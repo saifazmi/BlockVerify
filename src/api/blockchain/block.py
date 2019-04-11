@@ -7,10 +7,10 @@ from transaction import GenesisTransaction
 
 class Block:
     """
-    A class used to represent a Block in the Blockchain
+    A class used to represent a Block in the Blockchain.
 
     Attributes
-    -------
+    ----------
     NONCE_LEVEL : int
         the difficulty level of the proof of work algorithm
     index : int
@@ -218,7 +218,7 @@ class Block:
                 print('Block #{}: PASSED VERIFICATION'.format(self.index))
 
     def to_dict(self, txns=False):
-        """Converts this object to a python dictionary
+        """Converts this object to a python dictionary.
 
         Parameters
         ----------
