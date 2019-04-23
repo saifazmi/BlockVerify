@@ -4,8 +4,44 @@ import os
 
 
 class Transaction:
+    """
+    A class used to represent a Transaction in the Block of a Blockchain.
+
+    Attributes
+    ----------
+    file_hash : str
+        SHA-256 hash of the file to be stored in the block
+    author_key : str
+        The openPGP public key of the file author used for signing the
+        file hash
+    signature : str
+        The signature generated from signing the file hash with the
+        author's key
+
+    Methods
+    -------
+    calc_transaction_hash()
+        Calculates the SHA-256 hash of this transaction
+    to_dict()
+        Returns the transaction data as a python dictionary
+    from_dict()
+        Creates a transaction object from the given python dictionary
+    """
 
     def __init__(self, file_hash=None, author_key=None, signature=None):
+        """
+        Parameters
+        -----------
+        file_hash : str
+            SHA-256 hash of the file to be stored in the block
+        author_key : str
+            The openPGP public key of the file author used for signing the
+            file hash
+        signature : str
+            The signature generated from signing the file hash with the
+            author's key
+        """
+
         self.file_hash = file_hash
         self.author_key = author_key
         self.signature = signature
@@ -19,6 +55,8 @@ class Transaction:
             .format(self.file_hash, self.author_key, self.signature)
 
     def calc_transaction_hash(self):
+        """Calculates the SHA-256 hash of this transaction"""
+
         txn = ''.join([
             str(self.file_hash),
             str(self.author_key),
@@ -26,6 +64,8 @@ class Transaction:
         return sha256(txn.encode('utf-8')).hexdigest()
 
     def to_dict(self):
+        """Returns the transaction data as a python dictionary"""
+
         data = {
             'file_hash': self.file_hash,
             'author_key': self.author_key,
@@ -34,12 +74,20 @@ class Transaction:
         return data
 
     def from_dict(self, data):
+        """Creates a transaction object from the given python dictionary
+
+        Parameters
+        ----------
+        data : dict
+            Data to generate a transaction object
+        """
         for field in ['file_hash', 'author_key', 'signature']:
             if field in data:
                 setattr(self, field, data[field])
 
 
 class GenesisTransaction(Transaction):
+    """A class used to represent a Genesis Transaction in the Blockchain."""
 
     basedir = os.path.abspath(os.path.dirname(__file__))
     genesis_dir = os.path.join(basedir, 'genesis_files')
@@ -59,10 +107,10 @@ class GenesisTransaction(Transaction):
         super().__init__(
             GenesisTransaction.FILE_HASH,
             GenesisTransaction.AUTHOR_KEY,
-            GenesisTransaction.SIGNATURE
-        )
+            GenesisTransaction.SIGNATURE)
 
 
+# not used
 class TransactionPool:
 
     def __init__(self):
@@ -83,4 +131,3 @@ class TransactionPool:
 
     def is_empty(self):
         return self._queue.empty()
-

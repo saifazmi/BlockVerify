@@ -16,6 +16,25 @@ class Blockchain:
         List of all the blocks in this blockchain
     transaction_pool : list
         List of currently unprocessed transactions
+
+    Methods
+    -------
+    add_transactions(data)
+        Adds the given data as a transaction to the transaction pool
+        of this blockchain.
+    accept_block(block)
+        Adds a block to the blockchain
+    mine()
+        Mines a block by processing the transaction pool and adds it
+        to this blockchain.
+    file_exists(file_hash)
+        Checks if a file already exists in this blockchain.
+    verify_chain
+        Verifies the integrity (immutability) of this blockchain.
+    _genesis()
+        Iinitialises and adds the Genesis block to this blockchain.
+    to_dict(blocks, txns)
+        Converts this object to a python dicitonary.
     """
 
     def __init__(self):
@@ -39,12 +58,13 @@ class Blockchain:
         return len(self.blocks)
 
     def add_transaction(self, data):
-        """Adds a transaction to the transaction pool of this blockchain.
+        """Adds the given data as a transaction to the transaction pool
+        of this blockchain.
 
         Parameters
         ----------
         data : dict
-            The transaction data to be added to this blockchain.
+            The transaction data to be added to this blockchain
         """
 
         txn = Transaction()  # create new txn
@@ -52,12 +72,12 @@ class Blockchain:
         self.transaction_pool.append(txn)
 
     def accept_block(self, block):
-        """Adds a block to the blockchain
+        """Adds a block to the blockchain.
 
         Parameters
         ----------
         block : Block
-            The block to be added to this blockchain.
+            The block to be added to this blockchain
         """
 
         if self.genesis_block is None:
@@ -68,7 +88,8 @@ class Blockchain:
         self.blocks.append(block)
 
     def mine(self):
-        """Mines a block and adds it to this blockchain.
+        """Mines a block by processing the transaction pool and adds it
+        to this blockchain.
 
         Returns
         -------
@@ -130,7 +151,6 @@ class Blockchain:
             else False
         """
 
-
         if self.genesis_block is None:
             raise Exception('Genesis block not defined')
 
@@ -165,7 +185,6 @@ class Blockchain:
         dict
             A python dictionary containing Blockchain data
         """
-
 
         data = {
             'current_block': self.current_block.block_hash,
