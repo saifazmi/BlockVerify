@@ -30,8 +30,7 @@ class User(UserMixin, db.Model):
             name_real=self.username,
             name_email=self.email,
             key_type='RSA',
-            key_length=key_length,
-        )
+            key_length=key_length)
         return gpg.gen_key(batch_key_input)
 
     # Gravatar logic
