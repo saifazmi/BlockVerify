@@ -5,7 +5,7 @@ Flask-Migrate==2.1.1
 Flask-SQLAlchemy==2.3.2
 itsdangerous==0.24
 Jinja2==2.11.3
-Mako==1.0.7
+Mako==1.2.2
 MarkupSafe==1.0
 merkletools==1.0.3
 pysha3==1.0.2
